@@ -1,12 +1,11 @@
 import { BOARD_COLUMNS, formatBoardText } from "@/lib/formatBoardText";
 
-const SAMPLE_MESSAGE = `ASK ME ANYTHING
+type SplitFlapBoardProps = {
+  message: string;
+};
 
-YOUR AI ANSWER
-WILL APPEAR HERE`;
-
-export function SplitFlapBoard() {
-  const rows = formatBoardText(SAMPLE_MESSAGE);
+export function SplitFlapBoard({ message }: SplitFlapBoardProps) {
+  const rows = formatBoardText(message);
 
   return (
     <section
