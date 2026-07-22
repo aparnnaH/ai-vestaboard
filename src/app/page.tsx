@@ -7,27 +7,55 @@ const INITIAL_MESSAGE = `ASK ME ANYTHING
 
 YOUR AI ANSWER
 WILL APPEAR HERE`;
-const MOCK_ANSWER = "THIS IS A SAMPLE AI ANSWER";
+const LOADING_MESSAGE = "THINKING";
+const ERROR_MESSAGE = "OLLAMA IS UNAVAILABLE";
+
+type AskResponse = {
+  answer?: unknown;
+};
 
 export default function Home() {
   const [question, setQuestion] = useState("");
   const [boardMessage, setBoardMessage] = useState(INITIAL_MESSAGE);
-  const isAskDisabled = question.trim().length === 0;
+  const [isLoading, setIsLoading] = useState(false);
+  const isAskDisabled = question.trim().length === 0 || isLoading;
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (isAskDisabled) {
       return;
     }
 
-    setBoardMessage(MOCK_ANSWER);
-    setQuestion("");
+    setIsLoading(true);
+    setBoardMessage(LOADING_MESSAGE);
+
+    try {
+      const response = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
+      const data = (await response.json()) as AskResponse;
+
+      if (!response.ok || typeof data.answer !== "string") {
+        setBoardMessage(ERROR_MESSAGE);
+        return;
+      }
+
+      setBoardMessage(data.answer);
+      setQuestion("");
+    } catch {
+      setBoardMessage(ERROR_MESSAGE);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function handleReset() {
     setBoardMessage(INITIAL_MESSAGE);
     setQuestion("");
+    setIsLoading(false);
   }
 
   return (
@@ -43,7 +71,8 @@ export default function Home() {
           </label>
           <input
             id="question"
-            className="min-h-11 flex-1 rounded border border-zinc-700 bg-zinc-900 px-4 font-mono text-sm uppercase text-zinc-100 outline-none ring-white/20 placeholder:text-zinc-500 focus:border-zinc-500 focus:ring-2"
+            className="min-h-11 flex-1 rounded border border-zinc-700 bg-zinc-900 px-4 font-mono text-sm uppercase text-zinc-100 outline-none ring-white/20 placeholder:text-zinc-500 focus:border-zinc-500 focus:ring-2 disabled:cursor-not-allowed disabled:text-zinc-500"
+            disabled={isLoading}
             onChange={(event) => setQuestion(event.target.value)}
             placeholder="ASK A QUESTION"
             type="text"
@@ -54,7 +83,7 @@ export default function Home() {
             disabled={isAskDisabled}
             type="submit"
           >
-            Ask
+            {isLoading ? "Asking" : "Ask"}
           </button>
           <button
             className="min-h-11 rounded border border-zinc-700 px-4 font-mono text-sm font-bold uppercase text-zinc-200 transition hover:border-zinc-500"
