@@ -1,26 +1,12 @@
-const BOARD_ROWS = 6;
-const BOARD_COLUMNS = 22;
+import { BOARD_COLUMNS, formatBoardText } from "@/lib/formatBoardText";
 
-const SAMPLE_MESSAGE = [
-  "ASK ME ANYTHING",
-  "",
-  "YOUR AI ANSWER",
-  "WILL APPEAR HERE",
-  "",
-  "",
-];
+const SAMPLE_MESSAGE = `ASK ME ANYTHING
 
-function formatBoardRows(message: readonly string[]): string[][] {
-  return Array.from({ length: BOARD_ROWS }, (_, rowIndex) => {
-    const row = message[rowIndex] ?? "";
-    return Array.from({ length: BOARD_COLUMNS }, (_, columnIndex) => {
-      return row[columnIndex]?.toUpperCase() ?? " ";
-    });
-  });
-}
+YOUR AI ANSWER
+WILL APPEAR HERE`;
 
 export function SplitFlapBoard() {
-  const rows = formatBoardRows(SAMPLE_MESSAGE);
+  const rows = formatBoardText(SAMPLE_MESSAGE);
 
   return (
     <section
