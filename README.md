@@ -34,3 +34,11 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Local Personal Data
+
+The app stores your welcome profile, reminders, audio settings, and similar personal preferences in browser Local Storage while you use it. Those values are local to your browser and are not committed to GitHub.
+
+For optional file-based notes, copy `local-profile.example.json` to `local-profile.json` and put real personal details there. `local-profile.json` is ignored by Git so it stays local. Keep only fake/sample data in `local-profile.example.json`.
+
+Spotify credentials belong in `.env.local`, which is also ignored by Git. Use `.env.example` as the public template.

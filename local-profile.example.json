@@ -1,0 +1,15 @@
+{
+  "name": "SAMPLE PERSON",
+  "note": "TODAY IS YOURS",
+  "wakeTime": "07:30",
+  "reminders": [
+    {
+      "text": "DRINK WATER",
+      "time": "10:00"
+    },
+    {
+      "text": "STRETCH",
+      "time": "14:30"
+    }
+  ]
+}
