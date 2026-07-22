@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 const MUTED_STORAGE_KEY = "split-flap-muted";
 const VOLUME_STORAGE_KEY = "split-flap-volume";
@@ -88,15 +88,13 @@ function getBurstIndexes(indexes: readonly number[], maxBursts: number): number[
 export function useSplitFlapAudio(): UseSplitFlapAudioResult {
   const audioContextRef = useRef<AudioContext | null>(null);
   const scheduledNodesRef = useRef<ScheduledNode[]>([]);
-  const [isMuted, setIsMutedState] = useState(false);
-  const [volume, setVolumeState] = useState(DEFAULT_VOLUME);
-  const [isSupported, setIsSupported] = useState(false);
-
-  useEffect(() => {
-    setIsSupported(getAudioContextConstructor() !== null);
-    setIsMutedState(getStoredBoolean(MUTED_STORAGE_KEY, false));
-    setVolumeState(getStoredVolume());
-  }, []);
+  const [isMuted, setIsMutedState] = useState(() => {
+    return getStoredBoolean(MUTED_STORAGE_KEY, false);
+  });
+  const [volume, setVolumeState] = useState(getStoredVolume);
+  const [isSupported, setIsSupported] = useState(() => {
+    return getAudioContextConstructor() !== null;
+  });
 
   const getAudioContext = useCallback(() => {
     if (typeof window === "undefined") {
